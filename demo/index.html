@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <title>tooltip</title>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="../tethered.js"></script>
+    </head>
+    <body>
+        <style>
+        .target-box {
+            background-color: red;
+            width: 50px;
+            height: 20px;
+        }
+        .tethered-box {
+            background-color: blue;
+            width: 10px;
+            height: 10px;
+        }
+        .scroll-container {
+            width: 300px;
+            height: 300px;
+            overflow: auto;
+        }
+        .container {
+            width: 1000px;
+            height: 1000px;
+            /*padding: 100px;*/
+        }
+        .scroll-container .target-box {
+            background-color: red;
+            width: 200px;
+            height: 200px;
+        }
+        .scroll-container .tethered-box {
+            background-color: blue;
+            width: 50px;
+            height: 50px;
+        }
+        </style>
+
+        <h2>Positions</h2>
+        <div class="target-box" id="bottom-left"></div>
+
+        <h2>Scrollable container</h2>
+        <div class="scroll-container">
+            <div class="container">
+                <div class="target-box" id="contained"></div>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            function box() {
+                var box = document.createElement('div');
+                box.classList.add('tethered-box');
+                document.body.appendChild(box);
+                return box;
+            }
+            tethered(box(), document.querySelector('#bottom-left'), 'bottom left');
+            tethered(box(), document.querySelector('#contained'));
+        </script>
+</html>
