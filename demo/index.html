@@ -11,6 +11,7 @@
             background-color: red;
             width: 50px;
             height: 20px;
+            margin: 20px;
         }
         .tethered-box {
             background-color: blue;
@@ -40,7 +41,16 @@
         </style>
 
         <h2>Positions</h2>
-        <div class="target-box" id="bottom-left"></div>
+        <div style="display: flex; flex-direction: row">
+            <div class="target-box" id="bottom-left"></div>
+            <div class="target-box" id="bottom-center"></div>
+            <div class="target-box" id="bottom-right"></div>
+            <div class="target-box" id="middle-left"></div>
+            <div class="target-box" id="middle-right"></div>
+            <div class="target-box" id="top-left"></div>
+            <div class="target-box" id="top-center"></div>
+            <div class="target-box" id="top-right"></div>
+        </div>
 
         <h2>Scrollable container</h2>
         <div class="scroll-container">
@@ -57,6 +67,13 @@
                 return box;
             }
             tethered(box(), document.querySelector('#bottom-left'), 'bottom left');
+            tethered(box(), document.querySelector('#bottom-center'), 'bottom center');
+            tethered(box(), document.querySelector('#bottom-right'), 'bottom right');
+            tethered(box(), document.querySelector('#middle-left'), 'middle left');
+            tethered(box(), document.querySelector('#middle-right'), 'middle right');
+            tethered(box(), document.querySelector('#top-left'), 'top left');
+            tethered(box(), document.querySelector('#top-center'), 'top center');
+            tethered(box(), document.querySelector('#top-right'), 'top right');
             tethered(box(), document.querySelector('#contained'));
         </script>
 </html>

@@ -1,14 +1,14 @@
 'use strict';
 
-function tethered(element, target, position, options) {
+function tethered(element, target, attachment, options) {
   var o = options || {},
-      positionHoriz,
-      positionVert;
+      attachHoriz,
+      attachVert;
 
-  position = position || 'bottom center';
-  var pos = position.split(' ');
-  console.log(pos);
-
+  attachment = attachment || 'bottom center';
+  var att = attachment.split(' ');
+  attachVert = ['top', 'middle', 'bottom'].indexOf(att[0]) !== -1 ? att[0] : 'bottom';
+  attachHoriz = att[1] && ['left', 'center', 'right'].indexOf(att[1]) !== -1 ? att[1] : 'center';
 
   var spacing = o.spacing || 0;
 
@@ -27,48 +27,38 @@ function tethered(element, target, position, options) {
   }
 
   function newPos() {
-    var targetOffset = getOffset(target),
-        targetRect = target.getBoundingClientRect(),
+    var targetRect = target.getBoundingClientRect(),
         eltRect = element.getBoundingClientRect();
-
-    var centeringOffset = {
-      width: (targetRect.width - eltRect.width) / 2,
-      height: (targetRect.height - eltRect.height) / 2
+    return {
+      x: horizontalPos(eltRect, targetRect),
+      y: verticalPos(eltRect, targetRect)
     };
+  }
 
-    switch(position) {
-      // rounding some of the values are necessary for some browsers (FF, IE) so that there is no spacing between the
-      // arrow and the inner div
+  function horizontalPos(eltRect, targetRect) {
+    var targetLeftOffset = targetRect.left + window.pageXOffset - document.documentElement.clientLeft; // offset relative to the document
+    switch(attachHoriz) {
       case 'left':
-        return {
-          x: Math.round(targetOffset.left - element.offsetWidth - spacing),
-          y: targetOffset.top + centeringOffset.height
-        };
+        return attachVert === 'middle' ? Math.round(targetLeftOffset - element.offsetWidth - spacing)
+                                       : Math.round(targetLeftOffset - spacing);
       case 'right':
-        return {
-          x: Math.round(targetOffset.left + target.offsetWidth + spacing),
-          y: targetOffset.top + centeringOffset.height
-        };
-      case 'top':
-        return {
-          x: targetOffset.left + centeringOffset.width,
-          y: Math.ceil(targetOffset.top - element.offsetHeight - spacing)
-        };
+        return attachVert === 'middle' ? Math.round(targetLeftOffset + target.offsetWidth + spacing)
+                                       : Math.round(targetLeftOffset + target.offsetWidth - element.offsetWidth + spacing);
       default:
-        return {
-          x: targetOffset.left + centeringOffset.width,
-          y: Math.round(targetOffset.top + target.offsetHeight + spacing) // yes, the -1 is a magic value... for FF
-        };
+        return targetLeftOffset + (targetRect.width - eltRect.width) / 2;
     }
   }
 
-  // get the coordinates of the element relative to the document
-  function getOffset(elt) {
-    var rect = elt.getBoundingClientRect();
-    return {
-      top: rect.top + window.pageYOffset - document.documentElement.clientTop,
-      left: rect.left + window.pageXOffset - document.documentElement.clientLeft
-    };
+  function verticalPos(eltRect, targetRect) {
+    var targetTopOffset = targetRect.top + window.pageYOffset - document.documentElement.clientTop; // offset relative to the document
+    switch(attachVert) {
+      case 'top':
+        return Math.ceil(targetTopOffset - element.offsetHeight - spacing);
+      case 'bottom':
+        return Math.round(targetTopOffset + target.offsetHeight + spacing);
+      default:
+        return targetTopOffset + (targetRect.height - eltRect.height) / 2;
+    }
   }
 
   // get the coordinates of the element relative to the parent element
