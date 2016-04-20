@@ -67,4 +67,4 @@ function tethered(element, target, attachment, options) {
   }
 }
 
-//module.exports = tethered;
+module.exports = tethered;
